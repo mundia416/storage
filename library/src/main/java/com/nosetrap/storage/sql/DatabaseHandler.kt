@@ -2,6 +2,7 @@ package com.nosetrap.storage.sql
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
@@ -110,20 +111,6 @@ class DatabaseHandler(context: Context, databaseName: String)
     }
 
     /**
-     * query the given table
-     */
-    fun query(cursorCallback: CursorCallback, tableName: String, columns: Array<String>?=null,
-              whereClause:String?=null, orderBy:OrderBy? = null){
-        val orderByArray = if(orderBy != null){
-            arrayOf(orderBy)
-        }else{
-            null
-        }
-        query(cursorCallback,tableName, columns, whereClause,orderByArray)
-
-    }
-
-    /**
      * Convenience method for updating rows in the database.
      *
      * @param table the table to update in
@@ -135,6 +122,38 @@ class DatabaseHandler(context: Context, databaseName: String)
     fun update(tableName: String,values: ContentValues,whereClause: String? = null): Int{
         database = writableDatabase
        val count = database.update(tableName,values,whereClause,null)
+        database.close()
+
+        return count
+    }
+
+    /**
+     * query everything in a table
+     */
+    fun getAll(cursorCallback: CursorCallback, tableName: String){
+        query(cursorCallback,tableName,null,null,null )
+    }
+
+    /**
+     * insert a row into a table
+     *
+     * @return true if successfully inserted and false if an error occured
+     */
+    fun insert(tableName: String, values: ContentValues): Boolean{
+        database = writableDatabase
+        val count = database.insert(tableName,null,values)
+        database.close()
+
+        return count != -1L
+
+    }
+
+    /**
+     * get the number of entries in a table
+     */
+    fun getCount(tableName: String): Long{
+        database = readableDatabase
+       val count = DatabaseUtils.queryNumEntries(database,tableName)
         database.close()
 
         return count
