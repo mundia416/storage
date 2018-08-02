@@ -5,6 +5,7 @@ import android.content.Context
 /**
  * class used to handle sharedPreferences
  * simply instantiate it to use
+ * @param sharedPreferenceName the name of the apps shared preferences
  */
 class PreferenceHandler(context: Context,sharedPreferencesName: String) {
 
