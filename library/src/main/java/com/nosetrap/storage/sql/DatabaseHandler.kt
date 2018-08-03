@@ -11,6 +11,8 @@ import com.nosetrap.storage.exceptions.SqlDatabaseException
 class DatabaseHandler(context: Context, databaseName: String)
     : SQLiteOpenHelper(context,databaseName,null,0) {
 
+    constructor(context: Context) : this(context,"default_sql_database_name")
+
     private lateinit var database: SQLiteDatabase
 
     override fun onCreate(p0: SQLiteDatabase?) {
