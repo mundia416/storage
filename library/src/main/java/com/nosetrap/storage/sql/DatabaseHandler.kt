@@ -6,6 +6,7 @@ import android.database.DatabaseUtils
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import com.nosetrap.storage.exceptions.SqlDatabaseException
 
 class DatabaseHandler(context: Context, databaseName: String)
     : SQLiteOpenHelper(context,databaseName,null,0) {

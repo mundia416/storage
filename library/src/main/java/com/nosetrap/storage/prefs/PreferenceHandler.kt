@@ -5,9 +5,15 @@ import android.content.Context
 /**
  * class used to handle sharedPreferences
  * simply instantiate it to use
- * @param sharedPreferenceName the name of the apps shared preferences
+ * @param sharedPreferenceName the name of the apps shared preferences,it uses a default name if
+ * not set
  */
 class PreferenceHandler(context: Context,sharedPreferencesName: String) {
+
+
+    constructor(context: Context) : this(context,"default_shared_preferences_name") {
+
+    }
 
     private val basePrefs = BasePrefs(context,sharedPreferencesName)
 
