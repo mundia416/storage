@@ -109,7 +109,7 @@ class DatabaseHandler(context: Context, databaseName: String)
         database = readableDatabase
         val cursor = database.query(tableName,columns,whereClause,null,null,null,orderByString)
         database.close()
-        cursorCallback.onCursorQueried(cursor)
+        cursorCallback.onCursorQueried(EasyCursor(cursor))
         cursor.close()
     }
 
