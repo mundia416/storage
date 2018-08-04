@@ -9,7 +9,7 @@ import android.provider.BaseColumns
 import com.nosetrap.storage.exceptions.SqlDatabaseException
 
 class DatabaseHandler(context: Context, databaseName: String)
-    : SQLiteOpenHelper(context,databaseName,null,0) {
+    : SQLiteOpenHelper(context,databaseName,null,1) {
 
     constructor(context: Context) : this(context,"default_sql_database_name")
 
