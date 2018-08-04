@@ -7,10 +7,10 @@ import android.database.Cursor
  * @WARNING this class should only ever be instantiated in this library, instantiating
  * it outside of this library could lead to unintended memory leaks
  */
-class EasyCursor(private val cursor: Cursor) {
+class EasyCursor(val cursor: Cursor) {
 
     fun moveToNext(){
-        cursor!!.moveToNext()
+        cursor.moveToNext()
     }
 
     /**
@@ -25,7 +25,7 @@ class EasyCursor(private val cursor: Cursor) {
      * @return whether the requested move fully succeeded.
      */
     fun moveToPosition(position: Int): Boolean {
-       return cursor!!.moveToPosition(position)
+       return cursor.moveToPosition(position)
     }
 
     /**
@@ -41,7 +41,7 @@ class EasyCursor(private val cursor: Cursor) {
      * @return the value of that column as a long.
      */
      fun getLong(column :String): Long {
-       return cursor!!.getLong(cursor!!.getColumnIndex(column))
+       return cursor.getLong(cursor.getColumnIndex(column))
     }
 
     /**
@@ -105,7 +105,8 @@ return cursor!!.moveToPrevious()    }
      * @return the number of rows in the cursor.
      */
      fun getCount(): Int {
-return cursor!!.count   }
+return cursor!!.count
+    }
 
     /**
      * Returns whether the cursor is pointing to the first row.
