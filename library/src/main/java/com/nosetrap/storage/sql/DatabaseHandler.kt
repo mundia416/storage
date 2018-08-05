@@ -55,7 +55,7 @@ class DatabaseHandler(context: Context, databaseName: String)
         }
 
         //creating the table
-       val sqlString = "CREATE TABLE IF NOT EXISTS $tableName(${BaseColumns._ID} INTEGER AUTO INCREMENT" +
+       val sqlString = "CREATE TABLE IF NOT EXISTS $tableName(${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT" +
                "${colStringBuilder.toString()} )"
 
         database = writableDatabase

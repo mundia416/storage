@@ -2,8 +2,10 @@ package com.nosetrap.storage
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.nosetrap.storage.sql.DatabaseHandler
 import com.nosetrap.storage.sql.OrderBy
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,8 +13,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val d = DatabaseHandler(this)
-        d.createTable("dfdf", arrayOf("fsfd","df"),null)
-        d.getCount("dfdf")
+        val tableName = "dfdf"
+
+        create.setOnClickListener {
+            d.createTable(tableName, arrayOf("fsfd", "df"), null)
+            Toast.makeText(this,"created" +
+                    "",Toast.LENGTH_SHORT).show()
+
+        }
+
+        delete.setOnClickListener {
+            d.deleteTable(tableName)
+            Toast.makeText(this,"deleted",Toast.LENGTH_SHORT).show()
+        }
 
 
 
