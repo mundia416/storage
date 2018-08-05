@@ -86,9 +86,10 @@ class DatabaseHandler(context: Context, databaseName: String)
      *            will return all rows for the given table.
      *@param cursorCallback the callback to which the cursor is passed to on a successful query
      * @param orderBy How to order the rows,
+     * @param limit get a specified amount of rows. if 0 it will return all the found rows
      */
     fun query(cursorCallback: CursorCallback, tableName: String, columns: Array<String>?=null,
-              whereClause:String?=null, orderBy: Array<OrderBy>?=null){
+              whereClause:String?=null, orderBy: Array<OrderBy>?=null, limit: Int = 0){
 
         //get the orderby string
         var orderByString:String? = null
@@ -102,6 +103,10 @@ class DatabaseHandler(context: Context, databaseName: String)
                 }
             }
             if (orderByStringBuilder.length != 0) {
+                //get the limit
+                if(limit > 0){
+                    orderByStringBuilder.append(" limit $limit")
+                }
                 orderByString = orderByStringBuilder.toString()
             }
         }
