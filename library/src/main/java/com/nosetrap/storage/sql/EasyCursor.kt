@@ -9,6 +9,20 @@ import android.database.Cursor
  */
 class EasyCursor(val cursor: Cursor) {
 
+    /**
+     * iterate through all the items in the cursor
+     * @param listener is the interface which contains the code to be executed on each item in the cursor
+     */
+    fun iterate(listener: IterateListener){
+        //no need to move to fisrt because its already moved to first inside the DatabaseHandler class
+        for(i in 0..(cursor.count-1)){
+            listener.onNext(this)
+            cursor.moveToNext()
+        }
+
+
+    }
+
     fun moveToNext(){
         cursor.moveToNext()
     }

@@ -102,7 +102,7 @@ class DatabaseHandler(context: Context, databaseName: String)
                     orderByStringBuilder.append(",${orderBy[i].column} ${OrderBy.convertMethodToString(orderBy[i].method)}")
                 }
             }
-            if (orderByStringBuilder.length != 0) {
+            if (orderByStringBuilder.isNotEmpty()) {
                 //get the limit
                 if(limit > 0){
                     orderByStringBuilder.append(" limit $limit")
@@ -114,6 +114,7 @@ class DatabaseHandler(context: Context, databaseName: String)
         database = readableDatabase
         val cursor = database.query(tableName,columns,whereClause,null,null,null,orderByString)
 
+        cursor.moveToFirst()
         cursorCallback.onCursorQueried(EasyCursor(cursor))
         cursor.close()
         database.close()
