@@ -38,4 +38,22 @@
         android:text="Insert"
         tools:layout_editor_absoluteX="43dp"
         tools:layout_editor_absoluteY="145dp" />
+
+    <Button
+        android:id="@+id/savePojo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="savePojo" />
+
+    <Button
+        android:id="@+id/getPojo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="getPojo" />
+
+    <Button
+        android:id="@+id/updatePojo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="updatePojo" />
 </LinearLayout>
