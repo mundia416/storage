@@ -1,7 +1,7 @@
 # storage
 this is a library that handles the different ways of storing data in android.<br/><br/>
 
-currently it makes the folling methods a whole lot simpler:<br/><br/>
+currently it makes the following methods a whole lot simpler:<br/><br/>
 1.storing and retrieving from the sharedPreferences<br/>
 2.storing and retrieving from Sqlite Database<br/>
 3.storing and retrieving Plain Old Java Objects directly into Sqlite Database<br/><br/>
