@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.provider.BaseColumns
 import com.google.gson.Gson
+import com.nosetrap.storage.exceptions.InvalidPrefNameException
 import com.nosetrap.storage.sql.CursorCallback
 import com.nosetrap.storage.sql.DatabaseHandler
 import com.nosetrap.storage.sql.EasyCursor
@@ -11,16 +12,15 @@ import com.nosetrap.storage.sql.EasyCursor
 /**
  * stores plain pojo objects into an sql database where they can be retrieved
  */
-class Pojo(private val context: Context){
+class Pojo(private val context: Context,private val tableName: String = "pojo_objects_table_name"){
 
-    private val databaseHandler = DatabaseHandler(context,"pojo_objects_daatabase_name")
-
-    private val tableName = "pojo_objects_table_name"
-
+    private val databaseHandler = DatabaseHandler(context,"pojo_objects_daztabase_name")
+    
     /**
      * the column which contains the content of a pojo
      */
     private val colPojoContent = "pojo_content"
+
     /**
      * the column which contains the key for the pojo
      */
@@ -29,6 +29,7 @@ class Pojo(private val context: Context){
     init {
         databaseHandler.createTable(tableName, arrayOf(colPojoContent,colPojoKey),null)
     }
+
     /**
      * gets rid of all Pojo objects saved in the sql Database
      */

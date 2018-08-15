@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         }
         getPojo.setOnClickListener {
             val foo1: Foo = pojo.get(key,Foo::class.java)
-            val foo2: Foo2 = pojo.get(key2,Foo2::class.java)
+            pojo.get(key2,Array<Foo2>::class.java)
             Log.d("fdf",foo1.toString())
             Log.d("fdf",foo1.toString())
         }

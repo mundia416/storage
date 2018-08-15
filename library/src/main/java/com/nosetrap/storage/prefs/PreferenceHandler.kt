@@ -36,6 +36,7 @@ class PreferenceHandler(context: Context,sharedPreferencesName: String) {
      */
     fun get(key: String, defaultVal: Int): Int{
         return basePrefs.prefs.getInt(key,defaultVal)
+
     }
 
     /**
