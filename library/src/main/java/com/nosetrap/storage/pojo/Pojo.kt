@@ -15,7 +15,7 @@ import com.nosetrap.storage.sql.EasyCursor
 class Pojo(private val context: Context,private val tableName: String = "pojo_objects_table_name"){
 
     private val databaseHandler = DatabaseHandler(context,"pojo_objects_daztabase_name")
-    
+
     /**
      * the column which contains the content of a pojo
      */
@@ -26,9 +26,19 @@ class Pojo(private val context: Context,private val tableName: String = "pojo_ob
      */
     private val colPojoKey = "pojo_key"
 
+    /**
+     * variable that returns the number of pojo entries in the tablename
+     */
+    var count: Long = 0
+    private set
+    get() {
+        return databaseHandler.getCount(tableName)
+    }
+
     init {
         databaseHandler.createTable(tableName, arrayOf(colPojoContent,colPojoKey),null)
     }
+
 
     /**
      * gets rid of all Pojo objects saved in the sql Database
