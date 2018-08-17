@@ -8,18 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import com.nosetrap.storage.exceptions.SqlDatabaseException
 
-class DatabaseHandler(context: Context, databaseName: String)
-    : SQLiteOpenHelper(context,databaseName,null,1) {
+class DatabaseHandler(context: Context, databaseName: String) {
 
     constructor(context: Context) : this(context,"default_sql_database_name")
 
-    private lateinit var database: SQLiteDatabase
-
-    override fun onCreate(p0: SQLiteDatabase?) {
-    }
-
-    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-    }
+    private val databaseExtension = DatabaseHandlerExtension(context, databaseName)
 
     /**
      * create a database table
@@ -31,47 +24,16 @@ class DatabaseHandler(context: Context, databaseName: String)
      * only the id collumn
      */
     fun createTable(tableName:String,stringColumns: Array<String>?,intColumns: Array<String>?){
-        //check if there is no column passed
-       /* if((stringColumns == null && intColumns == null) ||
-                ((stringColumns?.size ?: 0) == 0 && (intColumns?.size ?: 0) == 0 ) ||
-                ((stringColumns?.size ?: 0) == 0 &&  intColumns == null) ||
-                ((intColumns?.size ?: 0) == 0 &&  stringColumns == null)){
-            throw SqlDatabaseException("attempted to create a table without any columns")
-        }*/
-
-        //create the columns string
-
-        val colStringBuilder = StringBuilder()
-
-        if(stringColumns != null){
-            for (col in stringColumns){
-                colStringBuilder.append(", $col TEXT")
-            }
-        }
-
-        if(intColumns != null){
-            for (col in intColumns){
-                colStringBuilder.append(", $col INTEGER")
-            }
-        }
-
-        //creating the table
-       val sqlString = "CREATE TABLE IF NOT EXISTS $tableName(${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT" +
-               "${colStringBuilder.toString()} )"
-
-        database = writableDatabase
-        database.execSQL(sqlString)
-        database.close()
+        databaseExtension.createTable(tableName, stringColumns, intColumns)
+        databaseExtension.closeConnection()
     }
 
     /**
      * delete a database table
      */
     fun deleteTable(tableName: String){
-        database = writableDatabase
-        val sqlString = "DROP TABLE IF EXISTS $tableName"
-       database.execSQL(sqlString)
-        database.close()
+        databaseExtension.deleteTable(tableName)
+        databaseExtension.closeConnection()
     }
 
 
@@ -92,33 +54,14 @@ class DatabaseHandler(context: Context, databaseName: String)
     fun query(cursorCallback: CursorCallback, tableName: String, columns: Array<String>?=null,
               whereClause:String?=null, orderBy: Array<OrderBy>?=null, limit: Int = 0){
 
-        //get the orderby string
-        var orderByString:String? = null
-        if(orderBy != null) {
-            val orderByStringBuilder = StringBuilder()
-            for (i in 0..(orderBy.size - 1)) {
-                if (i == 0) {
-                    orderByStringBuilder.append("${orderBy[i].column} ${OrderBy.convertMethodToString(orderBy[i].method)}")
-                } else {
-                    orderByStringBuilder.append(",${orderBy[i].column} ${OrderBy.convertMethodToString(orderBy[i].method)}")
-                }
-            }
-            if (orderByStringBuilder.isNotEmpty()) {
-                //get the limit
-                if(limit > 0){
-                    orderByStringBuilder.append(" limit $limit")
-                }
-                orderByString = orderByStringBuilder.toString()
+        val internalCallback = object : CursorCallback{
+            override fun onCursorQueried(cursor: EasyCursor) {
+                cursorCallback.onCursorQueried(cursor)
+                cursor.close()
             }
         }
-
-        database = readableDatabase
-        val cursor = database.query(tableName,columns,whereClause,null,null,null,orderByString)
-
-        cursor.moveToFirst()
-        cursorCallback.onCursorQueried(EasyCursor(cursor))
-        cursor.close()
-        database.close()
+        databaseExtension.query(internalCallback, tableName, columns, whereClause, orderBy, limit)
+        databaseExtension.closeConnection()
     }
 
     /**
@@ -131,9 +74,8 @@ class DatabaseHandler(context: Context, databaseName: String)
      * @return the number of rows affected
      */
     fun update(tableName: String,values: ContentValues,whereClause: String? = null): Int{
-        database = writableDatabase
-       val count = database.update(tableName,values,whereClause,null)
-        database.close()
+       val count = databaseExtension.update(tableName,values,whereClause)
+        databaseExtension.closeConnection()
 
         return count
     }
@@ -151,40 +93,38 @@ class DatabaseHandler(context: Context, databaseName: String)
      * @return true if successfully inserted and false if an error occured
      */
     fun insert(tableName: String, values: ContentValues): Boolean{
-        database = writableDatabase
-        val count = database.insert(tableName,null,values)
-        database.close()
-
-        return count != -1L
-
+        val success = databaseExtension.insert(tableName, values)
+        databaseExtension.close()
+        return success
     }
 
     /**
      * get the number of entries in a table
      */
     fun getCount(tableName: String): Long{
-        database = readableDatabase
-       val count = DatabaseUtils.queryNumEntries(database,tableName)
-        database.close()
-
+       val count = databaseExtension.getCount(tableName)
+       databaseExtension.closeConnection()
         return count
     }
 
     /**
      * delete row(s) from a database table
+     *      * @return the number of values that have been removed from the table
+
      */
-    fun removeRows(tableName: String,whereClause: String){
-        database = writableDatabase
-        database.delete(tableName,whereClause,null)
-        database = readableDatabase
+    fun removeRows(tableName: String,whereClause: String):Int{
+       val count = databaseExtension.removeRows(tableName,whereClause)
+        databaseExtension.closeConnection()
+        return count
     }
 
     /**
      * deletes all the rows in a table
+     *      * @return the number of values that have been removed from the table
      */
-    fun clearTable(tableName: String){
-        database = writableDatabase
-        database.delete(tableName,null,null)
-        database = readableDatabase
+    fun clearTable(tableName: String): Int{
+       val count = databaseExtension.clearTable(tableName)
+        databaseExtension.closeConnection()
+        return count
     }
 }

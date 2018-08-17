@@ -23,6 +23,20 @@ class EasyCursor(val cursor: Cursor) {
 
     }
 
+    /**
+     * Closes the Cursor, releasing all of its resources and making it completely invalid.
+     * Unlike {@link #deactivate()} a call to {@link #requery()} will not make the Cursor valid
+     * again.
+     *
+     * this is only useful if a query is made using the DatabaseHandlerExtension class
+     */
+    fun close(){
+        cursor.close()
+    }
+
+    /**
+     *
+     */
     fun moveToNext(){
         cursor.moveToNext()
     }
