@@ -27,16 +27,17 @@ class DatabaseHandler(context: Context, databaseName: String)
      *  ignored if it is null
      *  @param intColumns is a string array of the title of the columns with a type of Integer,it is
      *  ignored if it is null
-     *  @throws SqlDataBaseException when you try to create a table with no collumns
+     * if the stringColumns or intColumns entries have length of zero then the table will be created with
+     * only the id collumn
      */
     fun createTable(tableName:String,stringColumns: Array<String>?,intColumns: Array<String>?){
         //check if there is no column passed
-        if((stringColumns == null && intColumns == null) ||
+       /* if((stringColumns == null && intColumns == null) ||
                 ((stringColumns?.size ?: 0) == 0 && (intColumns?.size ?: 0) == 0 ) ||
                 ((stringColumns?.size ?: 0) == 0 &&  intColumns == null) ||
                 ((intColumns?.size ?: 0) == 0 &&  stringColumns == null)){
             throw SqlDatabaseException("attempted to create a table without any columns")
-        }
+        }*/
 
         //create the columns string
 
