@@ -27,7 +27,7 @@ repositories {
 add the library to your module dependency
 ```
 dependencies {
-    implementation 'com.github.mundia416:storage:0.1.5'
+    implementation 'com.github.mundia416:storage:{LATEST_RELEASE}'
 }
 ```
 
