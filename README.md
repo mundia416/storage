@@ -6,15 +6,6 @@ currently it makes the following methods a whole lot simpler:<br/><br/>
 2.storing and retrieving from Sqlite Database<br/>
 3.storing and retrieving Plain Old Java Objects directly into Sqlite Database<br/><br/>
 
-## SharedPreferences
-to store and retrieve data from sharedPreferences, simply create a PreferenceHandler object and call its method. there
-is no need to call commit() or apply() when inserting values because that is already handled. 
-the SharedPreferences are always instantiated with MODE_PRIVATE. <br/>
-
-## SQLite Database
-storing and retrieving data from an sqlite database has been made a whole lot simpler. simply create a DatabaseHandler
-class and easily perform CRUD actions with the methods it offers <br/>
-
 ## Usage
 
 add jitpack to your project dependency
@@ -27,10 +18,18 @@ repositories {
 add the library to your module dependency
 ```
 dependencies {
-    implementation 'com.github.mundia416:storage:0.1.5'
+    implementation 'com.github.mundia416:storage:{LATEST_RELEASE}'
 }
 ```
 
+## SharedPreferences
+to store and retrieve data from sharedPreferences, simply create a PreferenceHandler object and call its method. there
+is no need to call commit() or apply() when inserting values because that is already handled. 
+the SharedPreferences are always instantiated with MODE_PRIVATE. <br/>
+
+## SQLite Database
+storing and retrieving data from an sqlite database has been made a whole lot simpler. simply create a DatabaseHandler
+class and easily perform CRUD actions with the methods it offers <br/>
 
 ## Store a POJO
 you can store a Plain Old Java Object directly into an sqlite database.
