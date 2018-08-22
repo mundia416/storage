@@ -22,7 +22,13 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
         override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
         }
 
-    private var database: SQLiteDatabase? = null
+    /**
+     * database actions are performed on this object so you are able to assign your own SqliteDatabase
+     * object so that actions performed can be on it,
+     * Note that the connection is not closed after an action is performed on it so dont forget to close
+     * it after you are done
+     */
+     var database: SQLiteDatabase? = null
 
     /**
      * create a database table without closing the database connection after the table is created
