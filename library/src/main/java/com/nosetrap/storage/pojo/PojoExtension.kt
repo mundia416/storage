@@ -5,7 +5,6 @@ import android.content.Context
 import android.provider.BaseColumns
 import com.google.gson.Gson
 import com.nosetrap.storage.sql.CursorCallback
-import com.nosetrap.storage.sql.DatabaseHandler
 import com.nosetrap.storage.sql.DatabaseHandlerExtension
 import com.nosetrap.storage.sql.EasyCursor
 import java.lang.reflect.Type
@@ -13,6 +12,7 @@ import java.lang.reflect.Type
 /**
  * an extension class to add more functionality to the pojo class
  * @Warning Use wisely as improper use could lead to data leaks
+ * slesyd close the connection when done with the object
  */
 class PojoExtension (private val context: Context, private val tableName: String = "pojo_objects_table_name") {
 
