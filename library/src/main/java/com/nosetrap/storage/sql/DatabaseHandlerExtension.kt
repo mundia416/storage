@@ -104,7 +104,7 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
      * @param limit get a specified amount of rows. if 0 it will return all the found rows
      */
     fun query(cursorCallback: CursorCallback, tableName: String, columns: Array<String>?=null,
-              whereClause:String?=null, orderBy: Array<OrderBy>?=null, limit: Int = 0){
+              whereClause:String?=null, orderBy: Array<OrderBy>?=null,limit: Int = 0,offset: Int = 0){
 
         //get the orderby string
         var orderByString:String? = null
@@ -117,17 +117,20 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
                     orderByStringBuilder.append(",${orderBy[i].column} ${OrderBy.convertMethodToString(orderBy[i].method)}")
                 }
             }
-            if (orderByStringBuilder.isNotEmpty()) {
-                //get the limit
-                if(limit > 0){
-                    orderByStringBuilder.append(" limit $limit")
-                }
+
+            if(orderByStringBuilder.isNotBlank()){
                 orderByString = orderByStringBuilder.toString()
             }
         }
 
-        database = readableDatabase
-        val cursor = database?.query(tableName,columns,whereClause,null,null,null,orderByString)
+        databaseReadable()
+        val cursor = if(limit == 0) {
+            database?.query(tableName, columns, whereClause, null, null,
+                    null, orderByString)
+        }else{
+            database?.query(tableName, columns, whereClause, null, null,
+                    null, orderByString,"$offset,$limit")
+        }
 
         cursor?.moveToFirst()
         cursorCallback.onCursorQueried(EasyCursor(cursor!!))
@@ -193,6 +196,13 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
         database = readableDatabase
         val count = DatabaseUtils.queryNumEntries(database,tableName)
         return count
+    }
+
+    /**
+     *
+     */
+    fun execSQL(sql: String){
+        database?.execSQL(sql)
     }
 
     /**
