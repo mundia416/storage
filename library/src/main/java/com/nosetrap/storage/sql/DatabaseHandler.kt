@@ -52,7 +52,7 @@ class DatabaseHandler(context: Context, databaseName: String) {
      * @param limit get a specified amount of rows. if 0 it will return all the found rows
      */
     fun query(cursorCallback: CursorCallback, tableName: String, columns: Array<String>?=null,
-              whereClause:String?=null, orderBy: Array<OrderBy>?=null, limit: Int = 0){
+              whereClause:String?=null, orderBy: Array<OrderBy>?=null, limit: Int = 0,offset: Int = 0){
 
         val internalCallback = object : CursorCallback{
             override fun onCursorQueried(cursor: EasyCursor) {
@@ -60,7 +60,7 @@ class DatabaseHandler(context: Context, databaseName: String) {
                 cursor.close()
             }
         }
-        databaseExtension.query(internalCallback, tableName, columns, whereClause, orderBy, limit)
+        databaseExtension.query(internalCallback, tableName, columns, whereClause, orderBy, limit,offset)
         databaseExtension.closeConnection()
     }
 

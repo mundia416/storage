@@ -13,14 +13,14 @@ import android.provider.BaseColumns
  */
 class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteOpenHelper(context,databaseName,null,1) {
 
-        constructor(context: Context) : this(context,"default_sql_database_name")
+    constructor(context: Context) : this(context,"default_sql_database_name")
 
 
-        override fun onCreate(p0: SQLiteDatabase?) {
-        }
+    override fun onCreate(p0: SQLiteDatabase?) {
+    }
 
-        override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-        }
+    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
+    }
 
     /**
      * database actions are performed on this object so you are able to assign your own SqliteDatabase
@@ -28,7 +28,7 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
      * Note that the connection is not closed after an action is performed on it so dont forget to close
      * it after you are done
      */
-     var database: SQLiteDatabase? = null
+    var database: SQLiteDatabase? = null
 
     /**
      * create a database table without closing the database connection after the table is created
@@ -104,7 +104,7 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
      * @param limit get a specified amount of rows. if 0 it will return all the found rows
      */
     fun query(cursorCallback: CursorCallback, tableName: String, columns: Array<String>?=null,
-              whereClause:String?=null, orderBy: Array<OrderBy>?=null, limit: Int = 0){
+              whereClause:String?=null, orderBy: Array<OrderBy>?=null,limit: Int = 0,offset: Int = 0){
 
         //get the orderby string
         var orderByString:String? = null
@@ -117,17 +117,20 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
                     orderByStringBuilder.append(",${orderBy[i].column} ${OrderBy.convertMethodToString(orderBy[i].method)}")
                 }
             }
-            if (orderByStringBuilder.isNotEmpty()) {
-                //get the limit
-                if(limit > 0){
-                    orderByStringBuilder.append(" limit $limit")
-                }
+
+            if(orderByStringBuilder.isNotBlank()){
                 orderByString = orderByStringBuilder.toString()
             }
         }
 
-        database = readableDatabase
-        val cursor = database?.query(tableName,columns,whereClause,null,null,null,orderByString)
+        databaseReadable()
+        val cursor = if(limit == 0) {
+            database?.query(tableName, columns, whereClause, null, null,
+                    null, orderByString)
+        }else{
+            database?.query(tableName, columns, whereClause, null, null,
+                    null, orderByString,"$offset,$limit")
+        }
 
         cursor?.moveToFirst()
         cursorCallback.onCursorQueried(EasyCursor(cursor!!))
@@ -196,13 +199,20 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
     }
 
     /**
+     *
+     */
+    fun execSQL(sql: String){
+        database?.execSQL(sql)
+    }
+
+    /**
      * delete row(s) from a database table, the connection is not closed after its done
      *      * @return the number of values that have been removed from the table
 
      */
     fun removeRows(tableName: String,whereClause: String):Int{
         database = writableDatabase
-       return database?.delete(tableName,whereClause,null)!!
+        return database?.delete(tableName,whereClause,null)!!
     }
 
     /**
