@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.provider.BaseColumns
 import com.google.gson.Gson
-import com.nosetrap.storage.sql.CursorCallback
 import com.nosetrap.storage.sql.DatabaseHandlerExtension
 import com.nosetrap.storage.sql.EasyCursor
 import java.lang.reflect.Type
@@ -44,7 +43,7 @@ class PojoExtension (private val context: Context, private val tableName: String
     /**
      * closes the connection to the database
      */
-    fun closeConnection(){
+    fun closeConnection() {
         databaseHandlerExtension.closeConnection()
     }
 
@@ -116,13 +115,11 @@ class PojoExtension (private val context: Context, private val tableName: String
      */
     fun isExist(key: String): Boolean {
         var isExist = false
-        databaseHandlerExtension.query(object : CursorCallback {
-            override fun onCursorQueried(cursor: EasyCursor) {
-                if (cursor.getCount() > 0) {
-                    isExist = true
-                }
-                cursor.close()
+        databaseHandlerExtension.query({ cursor ->
+            if (cursor.getCount() > 0) {
+                isExist = true
             }
+            cursor.close()
         }, tableName, arrayOf(BaseColumns._ID),
                 "$colPojoKey = '$key'", null, 1)
 
@@ -141,21 +138,19 @@ class PojoExtension (private val context: Context, private val tableName: String
     fun <T> get(key: String, type: Type): T {
         var jsonObject: T? = null
 
-        databaseHandlerExtension.query(object : CursorCallback {
-            override fun onCursorQueried(cursor: EasyCursor) {
-                var json: String? = null
-                try {
-                    json = cursor.getString(colPojoContent)
-                } catch (e: Exception) {
-                }
-                //throw a NPE if json is null which means the pojo was never in the database
-                if (json == null) {
-                    throw  NullPointerException("no Pojo exists in the database with the specified key")
-                }
-
-                jsonObject = Gson().fromJson(json, type)
-                cursor.close()
+        databaseHandlerExtension.query({ cursor ->
+            var json: String? = null
+            try {
+                json = cursor.getString(colPojoContent)
+            } catch (e: Exception) {
             }
+            //throw a NPE if json is null which means the pojo was never in the database
+            if (json == null) {
+                throw  NullPointerException("no Pojo exists in the database with the specified key")
+            }
+
+            jsonObject = Gson().fromJson(json, type)
+            cursor.close()
         }, tableName, arrayOf(colPojoContent), "$colPojoKey = '$key'")
 
         return jsonObject!!

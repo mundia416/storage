@@ -51,16 +51,14 @@ class DatabaseHandler(context: Context, databaseName: String) {
      * @param orderBy How to order the rows,
      * @param limit get a specified amount of rows. if 0 it will return all the found rows
      */
-    fun query(cursorCallback: CursorCallback, tableName: String, columns: Array<String>?=null,
+    fun query(callback: (cursor: EasyCursor) -> Unit, tableName: String, columns: Array<String>?=null,
               whereClause:String?=null, orderBy: Array<OrderBy>?=null, limit: Int = 0,offset: Int = 0){
 
-        val internalCallback = object : CursorCallback{
-            override fun onCursorQueried(cursor: EasyCursor) {
-                cursorCallback.onCursorQueried(cursor)
-                cursor.close()
-            }
+        databaseExtension.query({cursor ->
+            callback(cursor)
+            cursor.close()
         }
-        databaseExtension.query(internalCallback, tableName, columns, whereClause, orderBy, limit,offset)
+                , tableName, columns, whereClause, orderBy, limit,offset)
         databaseExtension.closeConnection()
     }
 
@@ -83,8 +81,8 @@ class DatabaseHandler(context: Context, databaseName: String) {
     /**
      * query everything in a table
      */
-    fun getAll(cursorCallback: CursorCallback, tableName: String){
-        query(cursorCallback,tableName,null,null,null )
+    fun getAll(callback: (cursor: EasyCursor) -> Unit, tableName: String){
+        query(callback,tableName,null,null,null )
     }
 
     /**

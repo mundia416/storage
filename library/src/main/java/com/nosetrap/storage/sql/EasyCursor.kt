@@ -13,10 +13,10 @@ class EasyCursor(val cursor: Cursor) {
      * iterate through all the items in the cursor
      * @param listener is the interface which contains the code to be executed on each item in the cursor
      */
-    fun iterate(listener: IterateListener){
+    fun iterate(onNext: (cursor: EasyCursor) -> Unit){
         //no need to move to fisrt because its already moved to first inside the DatabaseHandler class
         for(i in 0..(cursor.count-1)){
-            listener.onNext(this)
+            onNext(this)
             cursor.moveToNext()
         }
 

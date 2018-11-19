@@ -103,7 +103,7 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
      * @param orderBy How to order the rows,
      * @param limit get a specified amount of rows. if 0 it will return all the found rows
      */
-    fun query(cursorCallback: CursorCallback, tableName: String, columns: Array<String>?=null,
+    fun query(callback: (cursor: EasyCursor) -> Unit,tableName: String, columns: Array<String>?=null,
               whereClause:String?=null, orderBy: Array<OrderBy>?=null,limit: Int = 0,offset: Int = 0){
 
         //get the orderby string
@@ -133,7 +133,7 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
         }
 
         cursor?.moveToFirst()
-        cursorCallback.onCursorQueried(EasyCursor(cursor!!))
+        callback(EasyCursor(cursor!!))
     }
 
     /**
@@ -173,8 +173,8 @@ class DatabaseHandlerExtension(context: Context, databaseName: String) : SQLiteO
     /**
      * query everything in a table, the connection is not closed after its done
      */
-    fun getAll(cursorCallback: CursorCallback, tableName: String){
-        query(cursorCallback,tableName,null,null,null )
+    fun getAll(callback: (cursor: EasyCursor) -> Unit, tableName: String){
+        query(callback,tableName,null,null,null )
     }
 
     /**
