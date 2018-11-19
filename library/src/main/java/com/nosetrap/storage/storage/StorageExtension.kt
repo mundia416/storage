@@ -1,9 +1,9 @@
 package com.nosetrap.storage.storage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.os.Environment
-import android.support.annotation.RequiresApi
 
 /**
  * an extension class that adds more functionality to the Storage object
@@ -357,7 +357,7 @@ class StorageExtension(private val context: Context) : Storage(context) {
     public fun getExternalAppDownloadPath(): String {
         if (isExternalStorageDisable()) return "";
         //noinspection ConstantConditions
-        return context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).absolutePath;
     }
 
     /**
@@ -365,10 +365,10 @@ class StorageExtension(private val context: Context) : Storage(context) {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/DCIM
      */
-    public fun getExternalAppDcimPath(): String {
-        if (isExternalStorageDisable()) return "";
+     fun getExternalAppDcimPath(): String {
+        if (isExternalStorageDisable()) return ""
         //noinspection ConstantConditions
-        return context.getExternalFilesDir(Environment.DIRECTORY_DCIM).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_DCIM).absolutePath
     }
 
     /**
@@ -376,28 +376,28 @@ class StorageExtension(private val context: Context) : Storage(context) {
      *
      * @return the path of /storage/emulated/0/Android/data/package/files/Documents
      */
-    public fun getExternalAppDocumentsPath(): String {
-        if (isExternalStorageDisable()) return "";
+     fun getExternalAppDocumentsPath(): String {
+        if (isExternalStorageDisable()) return ""
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             //noinspection ConstantConditions
-            return context.getExternalFilesDir(null).getAbsolutePath() + "/Documents";
+            return context.getExternalFilesDir(null).absolutePath + "/Documents"
         }
         //noinspection ConstantConditions
-        return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
+        return context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS).absolutePath
     }
 
-    /**
+    @SuppressLint("NewApi")
+            /**
      * Return the path of /storage/emulated/0/Android/obb/package.
      *
      * @return the path of /storage/emulated/0/Android/obb/package
      */
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    public fun getExternalAppObbPath(): String {
-        if (isExternalStorageDisable()) return "";
-        return context.getObbDir().getAbsolutePath();
+    fun getExternalAppObbPath(): String {
+        if (isExternalStorageDisable()) return ""
+        return context.obbDir.absolutePath
     }
 
     private fun isExternalStorageDisable(): Boolean {
-        return !Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+        return Environment.MEDIA_MOUNTED != Environment.getExternalStorageState()
     }
 }
